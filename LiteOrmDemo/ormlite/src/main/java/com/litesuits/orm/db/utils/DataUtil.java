@@ -182,12 +182,15 @@ public class DataUtil implements Serializable {
             String col = c.getColumnName(i);
             p = null;
             if (!Checker.isEmpty(table.pmap)) {
+                //该字段为一般属性
                 p = table.pmap.get(col);
             }
             if (p == null && table.key != null && col.equals(table.key.column)) {
+                //该字段为主键
                 p = table.key;
             }
             if (p == null) {
+                //实体已经移除该数据库字段
                 if (OrmLog.isPrint) {
                     OrmLog.w(TAG, "数据库字段[" + col + "]已在实体中被移除");
                 }

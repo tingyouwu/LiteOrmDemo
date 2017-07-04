@@ -111,10 +111,17 @@ public class FieldUtil {
         return false;
     }
 
+    /**
+     * 描述：获取类的所有声明的字段（包括public private protected 包括父类的声明字段）
+     **/
     public static List<Field> getAllDeclaredFields(Class<?> claxx) {
         // find all field.
         LinkedList<Field> fieldList = new LinkedList<Field>();
         while (claxx != null && claxx != Object.class) {
+            /**
+             * 获取类的所有声明的字段（包括public private protected 不包括父类的声明字段）
+             * 区别：getFields() 获得类的所有公共字段（public 包括父类）
+             **/
             Field[] fs = claxx.getDeclaredFields();
             for (int i = 0; i < fs.length; i++) {
                 Field f = fs[i];

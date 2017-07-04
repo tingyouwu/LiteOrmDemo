@@ -164,7 +164,9 @@ public final class TableManager {
                 if (OrmLog.isPrint) {
                     OrmLog.i(TAG, "Table [" + entityTable.name + "] check column now.");
                 }
+                //存在主键
                 if (entityTable.key != null) {
+                    //主键发生变化了 需要删除掉表重新创建
                     if (sqlTable.columns.get(entityTable.key.column) == null) {
                         SQLStatement stmt = SQLBuilder.buildDropTable(sqlTable.name);
                         stmt.execute(db);
@@ -176,6 +178,7 @@ public final class TableManager {
                     }
                 }
                 if (entityTable.pmap != null) {
+                    //判断一下是否存在新列
                     ArrayList<String> newColumns = new ArrayList<String>();
                     for (String col : entityTable.pmap.keySet()) {
                         if (sqlTable.columns.get(col) == null) {
@@ -186,6 +189,7 @@ public final class TableManager {
                         for (String col : newColumns) {
                             sqlTable.columns.put(col, 1);
                         }
+                        //插入新列
                         int sum = insertNewColunms(db, entityTable.name, newColumns);
                         if (OrmLog.isPrint) {
                             if (sum > 0) {
@@ -412,6 +416,7 @@ public final class TableManager {
             table.claxx = claxx;
             table.name = getTableName(claxx);
             table.pmap = new LinkedHashMap<String, Property>();
+            //获取类的所有声明的字段（包括public private protected 包括父类的声明字段）
             List<Field> fields = FieldUtil.getAllDeclaredFields(claxx);
             for (Field f : fields) {
                 if (FieldUtil.isInvalid(f)) {
@@ -441,12 +446,14 @@ public final class TableManager {
                     }
                 }
             }
+            //该类没有注解主键,判断字段属性中是否存在"id", "_id"。
             if (table.key == null) {
                 for (String col : table.pmap.keySet()) {
                     for (String id : ID) {
                         if (id.equalsIgnoreCase(col)) {
                             Property p = table.pmap.get(col);
                             if (p.field.getType() == String.class) {
+                                //遇到字符型id 属于自定义主键
                                 // 主键移除属性Map
                                 table.pmap.remove(col);
                                 table.key = new Primarykey(p, AssignType.BY_MYSELF);
@@ -465,16 +472,21 @@ public final class TableManager {
                     }
                 }
             }
+            //如果需要主键但是又不存在主键 那就提示错误
             if (needPK && table.key == null) {
                 throw new RuntimeException(
                         "你必须为[" + table.claxx.getSimpleName() + "]设置主键(you must set the primary key...)" +
                         "\n 提示：在对象的属性上加PrimaryKey注解来设置主键。");
             }
+            //把实体表信息加入缓存列表
             putEntityTable(claxx.getName(), table);
         }
         return table;
     }
 
+    /**
+     * 描述：检查主键是否符合要求
+     **/
     private static void checkPrimaryKey(Primarykey key) {
         if (key.isAssignedBySystem()) {
             if (!FieldUtil.isNumber(key.field.getType())) {

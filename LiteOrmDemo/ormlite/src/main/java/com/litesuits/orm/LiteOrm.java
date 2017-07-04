@@ -22,7 +22,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.litesuits.orm.db.DataBase;
 import com.litesuits.orm.db.DataBaseConfig;
 import com.litesuits.orm.db.TableManager;
-import com.litesuits.orm.db.annotation.Check;
 import com.litesuits.orm.db.assit.*;
 import com.litesuits.orm.db.impl.CascadeSQLiteImpl;
 import com.litesuits.orm.db.impl.SingleSQLiteImpl;

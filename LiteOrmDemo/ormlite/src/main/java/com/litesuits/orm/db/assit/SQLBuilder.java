@@ -74,7 +74,7 @@ public class SQLBuilder {
     }
 
     /**
-     * 构建【获取SQLite全部表】sql语句
+     * 构建【获取表结构】sql语句  取列名和数据类型
      */
     public static SQLStatement buildColumnsObtainAll(String table) {
         return new SQLStatement(PRAGMA_TABLE_INFO + table + PARENTHESES_RIGHT, null);
@@ -117,6 +117,7 @@ public class SQLBuilder {
         }
         sb.append(TABLE_IF_NOT_EXISTS).append(table.name).append(PARENTHESES_LEFT);
         boolean hasKey = false;
+        //先处理主键
         if (table.key != null) {
             hasKey = true;
             if (table.key.assign == AssignType.AUTO_INCREMENT) {
