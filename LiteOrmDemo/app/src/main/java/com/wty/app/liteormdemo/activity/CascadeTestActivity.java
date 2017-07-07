@@ -32,7 +32,7 @@ public class CascadeTestActivity extends BaseActivity {
      * 名字里包含路径符号"/"则将数据库建立到该路径下，可以使用sd卡路径。
      * 不包含则在系统默认路径下创建DB文件。
      */
-    public static final String DB_NAME = SD_CARD + "/lite/orm/cascade.db";
+    public static final String DB_NAME = "cascade.db";
 
     public static LiteOrm liteOrm;
 

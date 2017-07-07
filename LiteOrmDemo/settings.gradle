@@ -1,1 +1,1 @@
-include ':app', ':ormlite', ':liteormlib'
+include ':app', ':ormlite'
